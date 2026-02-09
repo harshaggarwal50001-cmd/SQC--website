@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Quant Coders Club</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+
+/* ================= GLOBAL RESET ================= */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Orbitron', sans-serif;
+}
+
+body{
+    background: radial-gradient(circle at 20% 20%, #0a0f2c, #02030a 70%);
+    color:white;
+    overflow-x:hidden;
+}
+
+/* ================= PARTICLE CANVAS ================= */
+#bgCanvas{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:-1;
+}
+
+/* ================= NAVBAR ================= */
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 50px;
+    backdrop-filter: blur(10px);
+    background: rgba(0,0,0,0.3);
+    border-bottom:1px solid rgba(0,255,255,0.2);
+}
+
+nav h1{
+    font-size:22px;
+    letter-spacing:2px;
+    color:#00f7ff;
+    text-shadow:0 0 10px #00f7ff;
+}
+
+nav button{
+    padding:10px 18px;
+    background:transparent;
+    border:1px solid #00f7ff;
+    color:#00f7ff;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+nav button:hover{
+    background:#00f7ff;
+    color:black;
+    box-shadow:0 0 20px #00f7ff;
+}
+
+/* ================= HERO ================= */
+.hero{
+    height:90vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+}
+
+.hero h2{
+    font-size:55px;
+    background:linear-gradient(90deg,#00f7ff,#ff00ff);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:glow 3s infinite alternate;
+}
+
+.hero p{
+    margin-top:20px;
+    font-size:18px;
+    opacity:0.8;
+}
+
+@keyframes glow{
+    from{ text-shadow:0 0 10px #00f7ff; }
+    to{ text-shadow:0 0 25px #ff00ff; }
+}
+
+/* ================= GLASS CARD SECTION ================= */
+.section{
+    padding:80px 10%;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:30px;
+}
+
+.card{
+    padding:30px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(0,255,255,0.2);
+    transition:0.4s;
+    position:relative;
+    overflow:hidden;
+}
+
+.card:hover{
+    transform:translateY(-12px) scale(1.03);
+    box-shadow:0 0 25px rgba(0,255,255,0.5);
+}
+
+.card::before{
+    content:"";
+    position:absolute;
+    width:200%;
+    height:200%;
+    background:conic-gradient(#00f7ff,transparent,#ff00ff);
+    animation:rotate 6s linear infinite;
+}
+
+.card::after{
+    content:"";
+    position:absolute;
+    inset:2px;
+    background:#050816;
+    border-radius:18px;
+}
+
+.card h3,
+.card p{
+    position:relative;
+    z-index:2;
+}
+
+@keyframes rotate{
+    from{transform:rotate(0deg);} 
+    to{transform:rotate(360deg);} 
+}
+
+/* ================= ROBO DOG SECTION ================= */
+.robo-section{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:center;
+    gap:50px;
+    padding:80px 10%;
+    background:linear-gradient(120deg, rgba(0,247,255,0.05), rgba(255,0,255,0.05));
+    border-top:1px solid rgba(0,255,255,0.2);
+    border-bottom:1px solid rgba(0,255,255,0.2);
+}
+
+.robo-image img{
+    width:340px;
+    border-radius:25px;
+    box-shadow:0 0 35px #00f7ff;
+    transition:0.4s;
+}
+
+.robo-image img:hover{
+    transform:scale(1.05) rotate(-1deg);
+    box-shadow:0 0 60px #ff00ff;
+}
+
+.robo-info{
+    max-width:520px;
+    background:rgba(255,255,255,0.05);
+    padding:30px;
+    border-radius:20px;
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(0,255,255,0.2);
+}
+
+.robo-info h2{
+    color:#00f7ff;
+    margin-bottom:15px;
+    text-shadow:0 0 12px #00f7ff;
+}
+
+.robo-info p{
+    margin:10px 0;
+    line-height:1.6;
+    opacity:0.9;
+}
+
+/* ================= IMAGE UPLOAD ================= */
+.upload-box{
+    margin:80px auto;
+    width:320px;
+    text-align:center;
+    padding:30px;
+    border:2px dashed #00f7ff;
+    border-radius:20px;
+    transition:0.3s;
+}
+
+.upload-box:hover{
+    box-shadow:0 0 25px #00f7ff;
+}
+
+.upload-box input{
+    margin-top:15px;
+}
+
+#preview{
+    margin-top:20px;
+    width:100%;
+    border-radius:15px;
+    display:none;
+    box-shadow:0 0 20px #ff00ff;
+}
+
+/* ================= FOOTER ================= */
+footer{
+    text-align:center;
+    padding:25px;
+    border-top:1px solid rgba(0,255,255,0.2);
+    margin-top:60px;
+    opacity:0.7;
+}
+
+
+
+/* ================= 3D TILT CARDS ================= */
+.card{
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+/* ================= FORM ================= */
+.form-input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid rgba(0,255,255,0.3);
+    background:rgba(0,0,0,0.4);
+    color:white;
+}
+
+.submit-btn{
+    padding:12px 25px;
+    background:#00f7ff;
+    border:none;
+    color:black;
+    cursor:pointer;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+/* ================= LOGIN ================= */
+.login-box{
+    max-width:400px;
+    margin:80px auto;
+    padding:30px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(12px);
+    border-radius:20px;
+    border:1px solid rgba(0,255,255,0.2);
+    text-align:center;
+}
+
+/* ================= GALLERY ================= */
+.gallery{
+    padding:80px 10%;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:25px;
+}
+
+.gallery img{
+    width:100%;
+    border-radius:15px;
+    transition:0.4s;
+    box-shadow:0 0 20px #00f7ff;
+}
+
+.gallery img:hover{
+    transform:scale(1.08);
+    box-shadow:0 0 40px #ff00ff;
+}
+
+/* ================= LEADERBOARD ================= */
+.leaderboard{
+    padding:80px 10%;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(12px);
+}
+
+th,td{
+    padding:15px;
+    border:1px solid rgba(0,255,255,0.2);
+    text-align:center;
+}
+
+th{
+    color:#00f7ff;
+}
+
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<!-- NAVBAR -->
+<nav>
+    <h1>⚡ Super Quant Coders</h1>
+    <button onclick="enterClub()">Enter Matrix</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <h2>FUTURE BUILT BY QUANTS</h2>
+    <p>Algorithms • AI • Finance • Code • Innovation</p>
+</div>
+
+<!-- CARDS -->
+<section class="section">
+
+<div class="card">
+    <h3>AI Research</h3>
+    <p>Exploring neural intelligence, deep learning & next‑gen cognition systems.</p>
+</div>
+
+<div class="card">
+    <h3>Quant Finance</h3>
+    <p>Building mathematical models that predict and dominate markets.</p>
+</div>
+
+<div class="card">
+    <h3>Elite Coders</h3>
+    <p>An army of developers engineering futuristic digital infrastructure.</p>
+</div>
+
+</section>
+
+<!-- ROBO DOG INFO SECTION -->
+<section class="robo-section">
+
+<div class="robo-image">
+    <img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc" alt="Robo Dog">
+</div>
+
+<div class="robo-info">
+    <h2>Cyber RoboDog Unit</h2>
+    <p><strong>Founded:</strong> 2005</p>
+    <p><strong>Founder:</strong> Mr. Vikram (PhD, IIT)</p>
+    <p>
+        This elite cybernetic research unit represents the technological spirit of
+        Super Quant Coders Club. It symbolizes the fusion of AI, robotics and
+        quantitative intelligence.
+    </p>
+    <p>
+        The club actively conducts workshops in Artificial Intelligence, Machine
+        Learning, Quant Finance, Robotics Automation and Deep Tech Innovation.
+    </p>
+</div>
+
+</section>
+
+<!-- IMAGE UPLOAD -->
+<div class="upload-box">
+    <h3>Upload Club Identity</h3>
+    <input type="file" id="imageInput" accept="image/*">
+    <img id="preview">
+</div>
+
+<!-- CLUB DETAILS / NITJ INFO -->
+<section class="robo-section">
+
+<div class="robo-info">
+    <h2>About Super Quant Coders @ NITJ</h2>
+    <p>
+        Super Quant Coders Club operates within the innovation ecosystem of
+        <strong>NIT Jalandhar (NITJ)</strong>, fostering elite talent in AI, ML,
+        Quantitative Finance and Advanced Computing.
+    </p>
+    <p>
+        Members gain hands‑on exposure through live research projects,
+        algorithmic trading simulations, robotics labs and national‑level
+        hackathons.
+    </p>
+    <p>
+        The club bridges academia with industry by inviting IIT PhDs,
+        quant researchers and AI founders for masterclass workshops.
+    </p>
+</div>
+
+<div class="robo-info">
+    <h2>Member Benefits</h2>
+    <p>• AI/ML & Data Science Workshops</p>
+    <p>• Quant Finance Training</p>
+    <p>• Hackathon & Coding Battles</p>
+    <p>• Startup Incubation Guidance</p>
+    <p>• Research Paper Collaboration</p>
+    <p>• Internship & Placement Referrals</p>
+</div>
+
+</section>
+
+<!-- UPCOMING EVENTS -->
+<section class="section">
+
+<div class="card">
+    <h3>AI Warfare Hackathon</h3>
+    <p>48‑hour deep learning & LLM battle arena.</p>
+</div>
+
+<div class="card">
+    <h3>Quant Trading Bootcamp</h3>
+    <p>Build hedge‑fund level trading algorithms.</p>
+</div>
+
+<div class="card">
+    <h3>Robo‑Automation Lab</h3>
+    <p>Hands‑on robotics + AI integration workshop.</p>
+</div>
+
+</section>
+
+<!-- REGISTRATION FORM -->
+<section class="robo-section">
+
+<div class="robo-info" style="width:100%; max-width:700px;">
+
+<h2>Join The Future</h2>
+
+<form id="clubForm">
+
+<input type="text" placeholder="Full Name" required class="form-input"><br><br>
+
+<input type="email" placeholder="Email Address" required class="form-input"><br><br>
+
+<input type="text" placeholder="College / Department" required class="form-input"><br><br>
+
+<input type="text" placeholder="Skills (AI, ML, Web, Finance...)" class="form-input"><br><br>
+
+<textarea placeholder="Why do you want to join Super Quant Coders?" class="form-input" rows="4"></textarea><br><br>
+
+<button type="submit" class="submit-btn">Submit Application</button>
+
+</form>
+
+</div>
+
+</section>
+
+
+
+<!-- LOGIN SYSTEM -->
+<section class="login-box">
+<h2>Member Login</h2>
+<input type="text" id="loginUser" placeholder="Username" class="form-input"><br><br>
+<input type="password" id="loginPass" placeholder="Password" class="form-input"><br><br>
+<button class="submit-btn" onclick="login()">Login</button>
+<p id="loginMsg"></p>
+</section>
+
+<!-- PROJECT SHOWCASE GALLERY -->
+<section class="gallery">
+
+<img src="https://images.unsplash.com/photo-1677442136019-21780ecad995" alt="AI Project">
+<img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c" alt="Coding Project">
+<img src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f" alt="Robotics">
+<img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd" alt="Data Science">
+
+</section>
+
+<!-- FEATURED PROJECTS PANEL -->
+<section class="section">
+
+<div class="card">
+    <h3>Quant Prediction Engine</h3>
+    <p>AI model predicting stock momentum using deep neural analytics.</p>
+    <img src="https://images.unsplash.com/photo-1642790106117-e829e14a795f" style="width:100%; margin-top:15px; border-radius:12px;">
+</div>
+
+<div class="card">
+    <h3>Autonomous RoboDog</h3>
+    <p>ML-powered robotic surveillance dog with vision intelligence.</p>
+    <img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc" style="width:100%; margin-top:15px; border-radius:12px;">
+</div>
+
+<div class="card">
+    <h3>AI Voice Dubber</h3>
+    <p>Multilingual speech cloning & video dubbing system.</p>
+    <img src="https://images.unsplash.com/photo-1589254065878-42c9da997008" style="width:100%; margin-top:15px; border-radius:12px;">
+</div>
+
+<div class="card">
+    <h3>Neural Code Assistant</h3>
+    <p>LLM trained to debug, optimize & generate production code.</p>
+    <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4" style="width:100%; margin-top:15px; border-radius:12px;">
+</div>
+
+</section>
+
+<!-- LEADERBOARD -->
+<section class="leaderboard">
+<h2 style="text-align:center; margin-bottom:25px; color:#00f7ff;">Elite Coders Leaderboard</h2>
+
+<table>
+<tr>
+<th>Rank</th>
+<th>Name</th>
+<th>Domain</th>
+<th>Score</th>
+</tr>
+
+<tr><td>1</td><td>Arjun Mehta</td><td>Quant AI</td><td>9800</td></tr>
+<tr><td>2</td><td>Simran Kaur</td><td>ML Research</td><td>9450</td></tr>
+<tr><td>3</td><td>Rohit Sharma</td><td>Robotics</td><td>9100</td></tr>
+<tr><td>4</td><td>Neha Verma</td><td>Data Science</td><td>8800</td></tr>
+
+</table>
+</section>
+
+<footer>
+    © 2049 Super Quant Coders Club • Built Inside NITJ Innovation Grid
+</footer>
+
+<script>
+
+/* ================= PARTICLE MATRIX BG ================= */
+const canvas = document.getElementById("bgCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<120;i++){
+    particles.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        r:Math.random()*2,
+        d:Math.random()*2
+    });
+}
+
+function animateParticles(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="#00f7ff";
+
+    particles.forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+    });
+
+    moveParticles();
+}
+
+function moveParticles(){
+    particles.forEach(p=>{
+        p.y += p.d;
+        if(p.y>canvas.height){
+            p.y=0;
+            p.x=Math.random()*canvas.width;
+        }
+    });
+}
+
+setInterval(animateParticles,33);
+
+/* ================= IMAGE PREVIEW ================= */
+document.getElementById("imageInput").addEventListener("change",function(){
+    const file = this.files[0];
+    if(file){
+        const reader = new FileReader();
+        reader.onload = function(e){
+            const img = document.getElementById("preview");
+            img.src = e.target.result;
+            img.style.display="block";
+        }
+        reader.readAsDataURL(file);
+    }
+});
+
+/* ================= BUTTON EFFECT ================= */
+function enterClub(){
+    document.body.style.animation = "flash 0.6s";
+    alert("⚡ Access Granted to Super Quant Coders Matrix ⚡");
+}
+
+/* ================= LOGIN LOGIC ================= */
+function login(){
+    const user = document.getElementById("loginUser").value;
+    const pass = document.getElementById("loginPass").value;
+
+    if(user === "quant" && pass === "future"){
+        document.getElementById("loginMsg").innerText = "Access Granted 🚀";
+        document.getElementById("loginMsg").style.color = "#00f7ff";
+    }else{
+        document.getElementById("loginMsg").innerText = "Access Denied";
+        document.getElementById("loginMsg").style.color = "red";
+    }
+}
+
+/* ================= 3D TILT ================= */
+
+document.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width/2;
+        const centerY = rect.height/2;
+
+        const rotateX = (y-centerY)/10;
+        const rotateY = (centerX-x)/10;
+
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+    });
+
+    card.addEventListener('mouseleave',()=>{
+        card.style.transform = "rotateX(0) rotateY(0) scale(1)";
+    });
+});
+
+</script>
+
+</body>
+</html>
